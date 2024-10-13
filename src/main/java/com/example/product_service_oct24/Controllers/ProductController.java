@@ -8,6 +8,8 @@ import com.example.product_service_oct24.models.Product;
 import com.example.product_service_oct24.services.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,14 +33,19 @@ public class ProductController {
 
 
     @GetMapping
-    public List<Product> getAllProducts() {
-
-        return new ArrayList<>();
+    public ResponseEntity<List<Product>> getAllProducts() {
+        // to customize the response status we have to put return type in a ResponseEntity<class>
+        //with HttpStatus enum we will be able to send status response to the client as well
+        ResponseEntity<List<Product>> response = new ResponseEntity<>(productService.getAllProducts(), HttpStatus.CONFLICT); //HttpStatus, we can set anything to show as reponse status
+        return response;
+        //by default it will send 200/ok status if the response is fine
+        //return productService.getAllProducts();
     }
 
     @GetMapping("/{id}")
-    public Product getSingleProduct(@PathVariable("id") Long id) {
-        return productService.getSingleProduct(id);
+    public ResponseEntity<Product> getSingleProduct(@PathVariable("id") Long id) {
+        ResponseEntity<Product> response = new ResponseEntity<>(productService.getSingleProduct(id), HttpStatus.CONTINUE);
+        return response;
     }
 
     @PostMapping()
@@ -49,15 +56,15 @@ public class ProductController {
         return p;
     }
     
-    @PatchMapping("/{id}")
-    public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product entity) {
-        return new Product();
-    }
+    // @PatchMapping("/{id}")
+    // public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product entity) {
+    //     return productService.updateProduct(id, entity);
+    // }
 
     @PutMapping("path/{id}")
-    public String putMethodName(@PathVariable("id") String id, @RequestBody String entity) {
-        
-        return entity;
+    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id, @RequestBody Product entity) {
+        ResponseEntity<Product> response = new ResponseEntity<>(productService.updateProduct(id, entity), HttpStatus.FOUND);
+        return response;
     }
 
     @DeleteMapping("/{id}")

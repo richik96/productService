@@ -12,7 +12,7 @@ public interface ProductService {
 
     public Product getSingleProduct(Long id);
     // public Product addNewProduct(Product entity);
-    // public Product updateProduct(Long id, Product entity);
+    public Product updateProduct(Long id, Product entity);
     // public void deleteProduct(Long id);
     public List<Product> getAllProducts();
 }
