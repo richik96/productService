@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.product_service_oct24.Exceptions.ProductNotExistsException;
 import com.example.product_service_oct24.models.Product;
 import com.example.product_service_oct24.services.ProductService;
 
@@ -36,16 +38,27 @@ public class ProductController {
     public ResponseEntity<List<Product>> getAllProducts() {
         // to customize the response status we have to put return type in a ResponseEntity<class>
         //with HttpStatus enum we will be able to send status response to the client as well
-        ResponseEntity<List<Product>> response = new ResponseEntity<>(productService.getAllProducts(), HttpStatus.CONFLICT); //HttpStatus, we can set anything to show as reponse status
+        ResponseEntity<List<Product>> response = new ResponseEntity<>(productService.getAllProducts(), HttpStatus.GATEWAY_TIMEOUT); //HttpStatus, we can set anything to show as reponse status
         return response;
         //by default it will send 200/ok status if the response is fine
         //return productService.getAllProducts();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getSingleProduct(@PathVariable("id") Long id) {
-        ResponseEntity<Product> response = new ResponseEntity<>(productService.getSingleProduct(id), HttpStatus.CONTINUE);
-        return response;
+    public ResponseEntity<Product> getSingleProduct(@PathVariable("id") Long id) throws ProductNotExistsException{
+        // ResponseEntity<Product> response = new ResponseEntity<>(productService.getSingleProduct(id), HttpStatus.CONTINUE);
+        // return response;
+        //try {
+            ResponseEntity<Product> response = ResponseEntity.status(HttpStatus.ACCEPTED)
+                                    .header("HERE WE GO", "Getting it successfully")
+                                    .body(productService.getSingleProduct(id));
+                return response;
+        // } catch (Exception e) {
+        //     ResponseEntity<Product> response = ResponseEntity.status(HttpStatus.NOT_FOUND)
+        //                             .header("ERROR", "Product not found")
+        //                             .body(null);
+        //         return response;
+        // }
     }
 
     @PostMapping()
@@ -56,19 +69,28 @@ public class ProductController {
         return p;
     }
     
-    // @PatchMapping("/{id}")
-    // public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product entity) {
-    //     return productService.updateProduct(id, entity);
-    // }
-
-    @PutMapping("path/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id, @RequestBody Product entity) {
-        ResponseEntity<Product> response = new ResponseEntity<>(productService.updateProduct(id, entity), HttpStatus.FOUND);
+    @PatchMapping("/{id}")
+    public ResponseEntity<Product> patchProduct(@PathVariable("id") Long id, @RequestBody Product entity) {
+        ResponseEntity<Product> response = ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+            .header("PUT", "Updated successfully")
+            .body(productService.patchProduct(id, entity));
         return response;
     }
 
+    // @PutMapping("path/{id}")
+    // public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id, @RequestBody Product entity) {
+    //     ResponseEntity<Product> response = ResponseEntity.status(HttpStatus.CREATED)
+    //         .header("PUT", "Updated successfully")
+    //         .body(productService.updateProduct(id, entity));
+    //     return response;
+    // }
+
     @DeleteMapping("/{id}")
-    public String deleteMethodName(@PathVariable("id") String id) {
-        return "Deleted";
+    public ResponseEntity<Product> deleteMethodName(@PathVariable("id") Long id) {
+
+        ResponseEntity<Product> response = ResponseEntity.status(HttpStatus.GONE)
+            .header("Response : ", "Deleted successfully")
+            .body(productService.deleteProduct(id));
+        return response;
     }
 }
