@@ -3,8 +3,9 @@ package com.example.product_service_oct24.services;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +25,6 @@ public class FakeStoreProductService implements ProductService{
 
     private RestTemplate restTemplate;
 
-    @Autowired
-    public FakeStoreProductService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-
     private Product convertFakeStoreProductToProduct(FakeStoreProductDto fakeStoreProductDto) {
         Product product = new Product();
         product.setId(fakeStoreProductDto.getId());
@@ -42,6 +38,7 @@ public class FakeStoreProductService implements ProductService{
 
     private FakeStoreProductDto convertProductToFakeStore(Product product) {
         FakeStoreProductDto fakeStoreProductDto = new FakeStoreProductDto();
+        
         fakeStoreProductDto.setId(product.getId());
         fakeStoreProductDto.setTitle(product.getTitle());
         fakeStoreProductDto.setDescription(product.getDescription());
@@ -77,7 +74,7 @@ public class FakeStoreProductService implements ProductService{
 
         if(response == null){
             throw new ProductNotExistsException("Product with id: "+id +
-                                                "does not exist");
+                                                " does not exist");
         }
         return convertFakeStoreProductToProduct(response);
     }
@@ -95,6 +92,7 @@ public class FakeStoreProductService implements ProductService{
 
         return products;
     }
+
 
     @Override
     public Product patchProduct(Long id, Product entity) {
