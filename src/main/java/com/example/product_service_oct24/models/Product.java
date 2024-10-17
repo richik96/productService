@@ -10,7 +10,7 @@ import lombok.Data;
 public class Product extends BaseModel{
 
     private String title;
-    private double price;
+    private Double price;
 
     @ManyToOne                  //cardinality(class : attribute) = product : category
     private Category category;

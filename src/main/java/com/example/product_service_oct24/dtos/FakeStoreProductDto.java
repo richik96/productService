@@ -6,7 +6,7 @@ import lombok.Data;
 
 public class FakeStoreProductDto {
 
-    private int id;
+    private Long id;
     private String title;
     private String description;
     private String category;

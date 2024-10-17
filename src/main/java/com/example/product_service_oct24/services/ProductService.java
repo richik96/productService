@@ -12,9 +12,10 @@ import com.example.product_service_oct24.models.Product;
 public interface ProductService {
 
     public Product getSingleProduct(Long id) throws ProductNotExistsException;
-    // public Product addNewProduct(Product entity);
-    //public Product updateProduct(Long id, Product entity);
+    
     public Product patchProduct(Long id, Product entity);
-    public Product deleteProduct(Long id);
+    public String deleteProduct(Long id);
     public List<Product> getAllProducts();
+    public Product addNewProduct(Product entity);
+    public Product replaceProduct(Long id, Product entity) throws ProductNotExistsException;
 }

@@ -19,15 +19,26 @@ import com.example.product_service_oct24.dtos.FakeStoreProductDto;
 import com.example.product_service_oct24.models.Category;
 import com.example.product_service_oct24.models.Product;
 
-@Service
+@Service("fakeStoreProductService")
 public class FakeStoreProductService implements ProductService{
 
+
+    @Override
+    public Product addNewProduct(Product entity) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Product replaceProduct(Long id, Product entity) {
+        return null;
+    }
 
     private RestTemplate restTemplate;
 
     private Product convertFakeStoreProductToProduct(FakeStoreProductDto fakeStoreProductDto) {
         Product product = new Product();
-        product.setId(fakeStoreProductDto.getId());
+        product.setId((long) fakeStoreProductDto.getId());
         product.setTitle(fakeStoreProductDto.getTitle());
         product.setDescription(fakeStoreProductDto.getDescription());
         product.setCategory(new Category());
@@ -122,7 +133,7 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public Product deleteProduct(Long id) {
+    public String deleteProduct(Long id) {
 
         RequestCallback requestCallback = restTemplate.httpEntityCallback(new FakeStoreProductDto(), FakeStoreProductDto.class);
         HttpMessageConverterExtractor<FakeStoreProductDto> responseExtractor = new 
@@ -131,6 +142,7 @@ public class FakeStoreProductService implements ProductService{
         FakeStoreProductDto response = restTemplate.execute("https://fakestoreapi.com/products/" + id, HttpMethod.DELETE, requestCallback, responseExtractor);
 
         // restTemplate.delete("https://fakestoreapi.com/products/" + id);
-        return convertFakeStoreProductToProduct(response);
+//        return convertFakeStoreProductToProduct(response);
+        return "Deleted";
     }
 }
