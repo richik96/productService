@@ -16,7 +16,7 @@ public class Product extends BaseModel{
 
     //CasecadeType.ALL = if we delete a category, all the products in that category will be deleted
     //also if we delete a product, the category will be deleted
-    @ManyToOne (fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
+    @ManyToOne (fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST})
     //cardinality(class : attribute) = product : category
     @JsonBackReference
     private Category category;

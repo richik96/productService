@@ -6,19 +6,21 @@ import com.example.product_service_oct24.models.Product;
 import com.example.product_service_oct24.repositories.CategoryRepository;
 import com.example.product_service_oct24.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 
-
+@Primary
 @Service("selfProductService")
 public class SelfProductService implements ProductService{
 
     @Autowired
     private ProductRepository productRepository;
 
+    
     public SelfProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
@@ -73,6 +75,8 @@ public class SelfProductService implements ProductService{
         if(savedProduct.getCategory() != null && entity.getCategory() != null){
             savedProduct.setCategory(entity.getCategory());
         }
+
+
         return productRepository.save(savedProduct);
     }
     @Override
@@ -87,8 +91,7 @@ public class SelfProductService implements ProductService{
         Optional<Category> categoryOptional = categoryRepository.findByName(entity.getCategory().getName());
 
         if(categoryOptional.isEmpty()) {
-
-//            entity.setCategory(categoryRepository.save(entity.getCategory()));
+           
         }
         else {
             entity.setCategory(categoryOptional.get());
