@@ -1,12 +1,10 @@
-package com.scaler.user_service_oct24.models;
+package com.example.product_service_oct24.dtos;
 
 
-import jakarta.persistence.Entity;
 import lombok.Data;
 
 @Data
-@Entity
-public class Role extends BaseModel{
+public class Role{
 
     private String name;
 
