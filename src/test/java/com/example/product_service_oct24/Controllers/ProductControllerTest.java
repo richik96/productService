@@ -1,7 +1,9 @@
 package com.example.product_service_oct24.Controllers;
 
+import com.example.product_service_oct24.Exceptions.ProductNotExistsException;
 import com.example.product_service_oct24.models.Product;
-import com.example.product_service_oct24.services.ProductService;
+import com.example.product_service_oct24.repositories.ProductRepository;
+import com.example.product_service_oct24.services.SelfProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,18 +12,24 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class ProductControllerTest {
 
     @Autowired
-    private ProductController productController;
+    private ProductController productController;    //injecting the controller
 
     @MockBean
-    private ProductService productService;
+    private SelfProductService productService;  //mocking the service
+
+    @MockBean
+    private ProductRepository productRepository;  //mocking the repository
+
     @Test
     void testProductsSameAsService() {
         //Arrange
@@ -53,5 +61,30 @@ class ProductControllerTest {
         List<Product> productResponse = response.getBody();
 
         assertEquals(products.size(), productResponse.size());
+    }
+
+
+
+    @Test
+    void testnonExistingProductthowsException() throws ProductNotExistsException {
+
+        //Arrange
+        when(
+                productRepository.findById(1L))
+                .thenReturn(
+                        Optional.empty()
+                );
+
+        when(
+                productService.getSingleProduct(10L)
+        ).thenCallRealMethod();
+
+
+
+        //Act
+        assertThrows(
+                ProductNotExistsException.class,
+                () -> productController.getSingleProduct(10L)
+        );
     }
 }
