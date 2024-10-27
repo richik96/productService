@@ -1,6 +1,7 @@
 package com.example.product_service_oct24.Controllers;
 
 import com.example.product_service_oct24.Exceptions.ProductNotExistsException;
+import com.example.product_service_oct24.commons.AuthenticationCommons;
 import com.example.product_service_oct24.models.Product;
 import com.example.product_service_oct24.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -18,19 +20,30 @@ import java.util.List;
 public class ProductController {
 
     private ProductService productService;
+    private RestTemplate restTemplate;
+    private AuthenticationCommons authenticationCommons;
 
     @Autowired
-    public ProductController(@Qualifier("selfProductService") ProductService productService) {
+    public ProductController(@Qualifier("selfProductService") ProductService productService, 
+                                            RestTemplate restTemplate, 
+                                            AuthenticationCommons authenticationCommons) {
+
         this.productService = productService;
+        this.restTemplate = restTemplate;
+        this.authenticationCommons = authenticationCommons;
     }
 
 
     @GetMapping
+//    public ResponseEntity<List<Product>> getAllProducts(@RequestHeader("AuthenticationToken") String token) {
     public ResponseEntity<List<Product>> getAllProducts() {
+//        if(!authenticationCommons.validateToken(token)) {
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//        }
         // to customize the response status we have to put return type in a ResponseEntity<class>
         //with HttpStatus enum we will be able to send status response to the client as well
         ResponseEntity<List<Product>> response = new ResponseEntity<>(productService.getAllProducts(),
-                                                        HttpStatus.GATEWAY_TIMEOUT);
+                                                        HttpStatus.ACCEPTED);
         //HttpStatus, we can set anything to show as reponse status
         return response;
         //by default it will send 200/ok status if the response is fine
