@@ -1,6 +1,6 @@
 CREATE TABLE category
 (
-    id         BIGINT NOT NULL AUTO_INCREMENT,
+    id         BIGINT AUTO_INCREMENT NOT NULL,
     created_at datetime NULL,
     updated_at datetime NULL,
     is_deleted BIT(1) NOT NULL,
@@ -50,15 +50,16 @@ CREATE TABLE ms_mentor
 
 CREATE TABLE product
 (
-    id            BIGINT NOT NULL AUTO_INCREMENT,
-    created_at    datetime NULL,
-    updated_at    datetime NULL,
-    is_deleted    BIT(1) NOT NULL,
-    title         VARCHAR(255) NULL,
+    id              BIGINT AUTO_INCREMENT NOT NULL,
+    created_at      datetime NULL,
+    updated_at      datetime NULL,
+    is_deleted      BIT(1) NOT NULL,
+    title           VARCHAR(255) NULL,
     price DOUBLE NULL,
-    category_id   BIGINT NULL,
-    `description` VARCHAR(255) NULL,
-    image         VARCHAR(255) NULL,
+    category_id     BIGINT NULL,
+    `description`   VARCHAR(255) NULL,
+    image           VARCHAR(255) NULL,
+    number_of_sales INT    NOT NULL,
     CONSTRAINT pk_product PRIMARY KEY (id)
 );
 
