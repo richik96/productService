@@ -6,6 +6,7 @@ import com.scaler.productservicedecmwfeve.models.Category;
 import com.scaler.productservicedecmwfeve.models.Product;
 
 import com.scaler.productservicedecmwfeve.repositories.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -77,16 +78,29 @@ public class FakeStoreProductService implements ProductService{
         Product savedProduct = productRepository.save(p);
         return savedProduct;
     }
-
     @Override
+    public Product saveProductToDb(Long id) {
+        FakeStoreProductdto productDto = restTemplate.getForObject("https://fakestoreapi.com/products/" +id, FakeStoreProductdto.class);
+        Product product = convertFakeStoreProductToProduct(productDto);
+        productRepository.save(product);
+        return product;
+    }
+    @Override
+    @Transactional
     public List<Product> saveAllProducts() throws RestClientException {
         FakeStoreProductdto[] fakeStoreProductdto = restTemplate.getForObject("https://fakestoreapi.com/products", FakeStoreProductdto[].class);
-        List<Product> products = new ArrayList<>();
-        for(FakeStoreProductdto productDto: fakeStoreProductdto) {
-            products.add(convertFakeStoreProductToProduct(productDto));
+//        List<Product> products = new ArrayList<>();
+//        for(FakeStoreProductdto productDto: fakeStoreProductdto) {
+//            products.add(convertFakeStoreProductToProduct(productDto));
+//        }
+//        productRepository.saveAll(products);
+//        return products;
+        List<Product> products =  Arrays.stream(fakeStoreProductdto).map(this::convertFakeStoreProductToProduct).toList();
+        if(products.isEmpty() || products == null) {
+            throw new RestClientException("No products found");
         }
-        return productRepository.saveAll(products);
-        //Arrays.stream(fakeStoreProductdto).map(this::convertFakeStoreProductToProduct).forEach(productRepository::save);
+        productRepository.saveAll(products);
+        return products;
     }
     /*@Override
     public Product addNewProduct(Product product) {

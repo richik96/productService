@@ -16,4 +16,6 @@ public interface ProductService {
     List<Product> getAllProducts();
     Product addNewProduct(ProductDto product);
     List<Product> saveAllProducts();
+
+     Product saveProductToDb(Long id);
 }

@@ -39,6 +39,13 @@ public class ProductController {
                 .body(productService.saveAllProducts());
     }
 
+    @PostMapping("/save/{id}")
+    public ResponseEntity<?> saveProductToDb(@RequestParam("id") Long id) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header("Content-Type", "application/json")
+                .body(productService.saveProductToDb(id));
+    }
+
     @GetMapping("/{id}") //to get all details for a specific product
     public ResponseEntity<?> getSingleProduct(@PathVariable("id") Long id) {
         return ResponseEntity.status(200)
