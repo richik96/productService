@@ -11,6 +11,6 @@ public class ApplicationConfiguration {
 
     @Bean
     public RestTemplate createRestTemplate() {
-        return new RestTemplateBuilder().build();
+        return new RestTemplateBuilder().build(); //Dependency Injection
     }
 }
